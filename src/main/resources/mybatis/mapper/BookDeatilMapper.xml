@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.book.BookDetailMapper">
+    <resultMap id="ordinaryBookMap" type="com.example.library.entity.book.OrdinaryBook">
+        <id column="id" property="id"/>
+        <result column="book_name" property="bookName"/>
+        <result column="author" property="author"/>
+        <result column="press" property="press"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="price" property="price"/>
+        <result column="description" property="description"/>
+        <result column="count" property="count"/>
+        <result column="in_count" property="inCount"/>
+        <result column="call_number" property="callNumber"/>
+        <collection property="items" ofType="com.example.library.entity.book.bookitem.OrdinaryBookItem">
+            <id property="id" column="iid"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+            <result property="location" column="location"/>
+        </collection>
+    </resultMap>
+    <select id="selectOrdinaryBookDetailByBookId" resultMap="ordinaryBookMap">
+        select ordinary_book.*,ordinary_book_item.id as iid,ordinary_book_item.should_return_time,ordinary_book_item.location from ordinary_book,ordinary_book_item
+        where ordinary_book.id=#{id}
+        and ordinary_book.id=ordinary_book_item.book_id
+    </select>
+
+    <resultMap id="magazineMap" type="com.example.library.entity.book.Magazine">
+        <id column="id" property="id"/>
+        <result column="book_name" property="bookName"/>
+        <result column="author" property="author"/>
+        <result column="issn" property="issn"/>
+        <result column="period_num" property="periodNum"/>
+        <result column="date" property="date"/>
+        <result column="count" property="count"/>
+        <result column="in_count" property="inCount"/>
+        <collection property="items" ofType="com.example.library.entity.book.bookitem.MagazineItem">
+            <id property="id" column="iid"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+            <result property="location" column="location"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectMagazineDetailByBookId" resultMap="magazineMap">
+        select magazine.*,magazine_item.id as iid,magazine_item.should_return_time,magazine_item.location from magazine,magazine_item
+        where magazine.id=#{id}
+        and magazine.id=magazine_item.book_id
+    </select>
+
+    <resultMap id="paperMap" type="com.example.library.entity.book.Paper">
+        <id column="id" property="id"/>
+        <result column="book_name" property="bookName"/>
+        <result column="author" property="author"/>
+        <result column="kind_num" property="kindNum"/>
+        <result column="date" property="date"/>
+        <result column="count" property="count"/>
+        <result column="in_count" property="inCount"/>
+        <collection property="items" ofType="com.example.library.entity.book.bookitem.PaperItem">
+            <id property="id" column="iid"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+            <result property="location" column="location"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectPaperDetailByBookId" resultMap="paperMap">
+        select paper.*,paper_item.id as iid,paper_item.should_return_time,paper_item.location from paper,paper_item
+        where paper.id=#{id}
+        and paper.id=paper_item.book_id
+    </select>
+</mapper>

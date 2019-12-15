@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.user.BorrowRecordMapper">
+
+    <resultMap id="borrowRecord" type="com.example.library.entity.Borrow">
+        <result property="borrowDate" column="borrow_date"/>
+        <result property="shouldReturnTime" column="should_return_time"/>
+        <result property="biId" column="bi_id"/>
+        <result property="type" column="type"/>
+        <association property="book">
+            <result property="bookName" column="book_name"/>
+            <result property="author" column="author"/>
+        </association>
+    </resultMap>
+
+    <select id="selectOrdinaryBorrowRecord" resultMap="borrowRecord">
+        select * from borrow,ordinary_book,ordinary_book_item
+        where borrow.ser_no=#{no} and validate=1
+        and ordinary_book_item.id=borrow.bi_id
+        and borrow.type=1
+        and ordinary_book_item.book_id=ordinary_book.id;
+    </select>
+
+    <select id="selectMagazineBorrowRecord" resultMap="borrowRecord">
+        select * from borrow,magazine,magazine_item
+        where borrow.ser_no=#{no} and validate=1
+        and magazine_item.id=borrow.bi_id
+        and borrow.type=2
+        and magazine_item.book_id=magazine.id;
+    </select>
+
+    <select id="selectPaperBorrowRecord" resultMap="borrowRecord">
+        select * from borrow,paper_item,paper
+        where borrow.ser_no=#{no} and validate=1
+        and paper_item.id=borrow.bi_id
+        and borrow.type=3
+        and paper_item.book_id=paper.id;
+    </select>
+
+
+
+</mapper>

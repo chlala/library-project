@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.book.item.OrdinaryBookItemMapper">
+    <insert id="insertBookItemBatch">
+        insert into ordinary_book_item(book_id,location) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.bookId},#{item.location})
+        </foreach>
+    </insert>
+</mapper>

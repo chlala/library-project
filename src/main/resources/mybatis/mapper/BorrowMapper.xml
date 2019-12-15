@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.user.BorrowMapper">
+
+    <resultMap id="teacherMap" type="com.example.library.entity.user.serve.Teacher">
+        <id property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="borrowNum" column="borrow_num"/>
+        <result property="oweMoney" column="owe_money"/>
+        <association property="borrowStrategy">
+            <result property="userType" column="user_type"/>
+            <result property="maxBorrowNum" column="max_borrow_num"/>
+            <result property="maxBorrowDay" column="max_borrow_day"/>
+        </association>
+        <collection property="borrowList" ofType="com.example.library.entity.Borrow">
+            <result property="borrowDate" column="borrow_date"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="juniorMap" type="com.example.library.entity.user.serve.student.Junior">
+        <id property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="borrowNum" column="borrow_num"/>
+        <result property="oweMoney" column="owe_money"/>
+        <association property="borrowStrategy">
+            <result property="userType" column="user_type"/>
+            <result property="maxBorrowNum" column="max_borrow_num"/>
+            <result property="maxBorrowDay" column="max_borrow_day"/>
+        </association>
+        <collection property="borrowList" ofType="com.example.library.entity.Borrow">
+            <result property="borrowDate" column="borrow_date"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="bachelorMap" type="com.example.library.entity.user.serve.student.Bachelor">
+        <id property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="borrowNum" column="borrow_num"/>
+        <result property="oweMoney" column="owe_money"/>
+        <association property="borrowStrategy">
+            <result property="userType" column="user_type"/>
+            <result property="maxBorrowNum" column="max_borrow_num"/>
+            <result property="maxBorrowDay" column="max_borrow_day"/>
+        </association>
+        <collection property="borrowList" ofType="com.example.library.entity.Borrow">
+            <result property="borrowDate" column="borrow_date"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="masterMap" type="com.example.library.entity.user.serve.student.Master">
+        <id property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="borrowNum" column="borrow_num"/>
+        <result property="oweMoney" column="owe_money"/>
+        <association property="borrowStrategy">
+            <result property="userType" column="user_type"/>
+            <result property="maxBorrowNum" column="max_borrow_num"/>
+            <result property="maxBorrowDay" column="max_borrow_day"/>
+        </association>
+        <collection property="borrowList" ofType="com.example.library.entity.Borrow">
+            <result property="borrowDate" column="borrow_date"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="doctorMap" type="com.example.library.entity.user.serve.student.Doctor">
+        <id property="no" column="no"/>
+        <result property="name" column="name"/>
+        <result property="borrowNum" column="borrow_num"/>
+        <result property="oweMoney" column="owe_money"/>
+        <association property="borrowStrategy">
+            <result property="userType" column="user_type"/>
+            <result property="maxBorrowNum" column="max_borrow_num"/>
+            <result property="maxBorrowDay" column="max_borrow_day"/>
+        </association>
+        <collection property="borrowList" ofType="com.example.library.entity.Borrow">
+            <result property="borrowDate" column="borrow_date"/>
+            <result property="shouldReturnTime" column="should_return_time"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectTeacherAndBorrowStrategy" resultMap="teacherMap">
+        SELECT * FROM teacher LEFT JOIN borrow_strategy ON user_type=1 AND book_type=1 LEFT JOIN borrow ON validate=#{validate} AND ser_no=#{no} WHERE NO=#{no}
+    </select>
+
+    <select id="selectJuniorAndBorrowStrategy" resultMap="juniorMap">
+        SELECT * FROM junior LEFT JOIN borrow_strategy ON user_type=#{type} AND book_type=1 LEFT JOIN borrow ON validate=#{validate} AND ser_no=#{no} WHERE NO=#{no}
+    </select>
+
+    <select id="selectBachelorAndBorrowStrategy" resultMap="bachelorMap">
+        SELECT * FROM bachelor LEFT JOIN borrow_strategy ON user_type=#{type} AND book_type=1 LEFT JOIN borrow ON validate=#{validate} AND ser_no=#{no} WHERE NO=#{no}
+    </select>
+
+    <select id="selectMasterAndBorrowStrategy" resultMap="masterMap">
+        SELECT * FROM master LEFT JOIN borrow_strategy ON user_type=#{type} AND book_type=1 LEFT JOIN borrow ON validate=#{validate} AND ser_no=#{no} WHERE NO=#{no}
+    </select>
+
+    <select id="selectDoctorAndBorrowStrategy" resultMap="doctorMap">
+        SELECT * FROM doctor LEFT JOIN borrow_strategy ON user_type=#{type} AND book_type=1 LEFT JOIN borrow ON validate=#{validate} AND ser_no=#{no} WHERE NO=#{no}
+    </select>
+
+    <sql id="ordinaryBook">
+        UPDATE ordinary_book,ordinary_book_item SET in_count=in_count-1
+        WHERE in_count-1>0 AND ordinary_book.id=ordinary_book_item.book_id AND ordinary_book_item.id=#{biId};
+        update ordinary_book_item set state=2,should_return_time=#{shouldReturnTime} where id=#{biId};
+    </sql>
+    <sql id="magazine">
+        UPDATE magazine,magazine_item SET in_count=in_count-1
+        WHERE in_count-1>0 AND magazine.id=magazine_item.book_id AND magazine_item.id=#{biId};
+        update magazine_item set state=2,should_return_time=#{shouldReturnTime} where id=#{biId};
+    </sql>
+    <sql id="paper">
+        UPDATE paper,paper_item SET in_count=in_count-1
+        WHERE in_count-1>0 AND paper.id=paper_item.book_id AND paper_item.id=#{biId};
+        update paper_item set state=2,should_return_time=#{shouldReturnTime} where id=#{biId};
+    </sql>
+
+    <sql id="borrow">
+        insert into borrow(bi_id,type,ser_no,validate,borrow_date,should_return_time) values(#{borrow.biId},#{borrow.type},#{borrow.serNo},#{borrow.validate},#{borrow.borrowDate},#{shouldReturnTime})
+    </sql>
+
+    <sql id="teacher">
+        update teacher set borrow_num=borrow_num+1 where no=#{no};
+        <include refid="borrow"/>
+    </sql>
+
+    <sql id="junior">
+        update junior set borrow_num=borrow_num+1 where no=#{no};
+        <include refid="borrow"/>
+    </sql>
+
+    <sql id="bachelor">
+        update bachelor set borrow_num=borrow_num+1 where no=#{no};
+        <include refid="borrow"/>
+    </sql>
+
+    <sql id="master">
+        update master set borrow_num=borrow_num+1 where no=#{no};
+        <include refid="borrow"/>
+    </sql>
+
+    <sql id="doctor">
+        update doctor set borrow_num=borrow_num+1 where no=#{no};
+        <include refid="borrow"/>
+    </sql>
+
+    <update id="teacherBorrowOrdinaryBook">
+        <include refid="ordinaryBook"/>
+        <include refid="teacher"/>
+    </update>
+
+    <update id="teacherBorrowMagazine">
+        <include refid="magazine"/>
+        <include refid="teacher"/>
+    </update>
+
+    <update id="teacherBorrowPaper">
+        <include refid="paper"/>
+        <include refid="teacher"/>
+    </update>
+
+    <update id="juniorBorrowOrdinaryBook">
+        <include refid="ordinaryBook"/>
+        <include refid="junior"/>
+    </update>
+
+    <update id="juniorBorrowMagazine">
+        <include refid="magazine"/>
+        <include refid="junior"/>
+    </update>
+
+    <update id="juniorBorrowPaper">
+        <include refid="paper"/>
+        <include refid="junior"/>
+    </update>
+
+    <update id="bachelorBorrowOrdinaryBook">
+        <include refid="ordinaryBook"/>
+        <include refid="bachelor"/>
+    </update>
+
+    <update id="bachelorBorrowMagazine">
+        <include refid="magazine"/>
+        <include refid="bachelor"/>
+    </update>
+
+    <update id="bachelorBorrowPaper">
+        <include refid="paper"/>
+        <include refid="bachelor"/>
+    </update>
+
+    <update id="masterBorrowOrdinaryBook">
+        <include refid="ordinaryBook"/>
+        <include refid="master"/>
+    </update>
+
+    <update id="masterBorrowMagazine">
+        <include refid="magazine"/>
+        <include refid="master"/>
+    </update>
+
+    <update id="masterBorrowPaper">
+        <include refid="paper"/>
+        <include refid="master"/>
+    </update>
+
+    <update id="doctorBorrowOrdinaryBook">
+        <include refid="ordinaryBook"/>
+        <include refid="doctor"/>
+    </update>
+
+    <update id="doctorBorrowMagazine">
+        <include refid="magazine"/>
+        <include refid="doctor"/>
+    </update>
+
+    <update id="doctorBorrowPaper">
+        <include refid="paper"/>
+        <include refid="doctor"/>
+    </update>
+
+</mapper>

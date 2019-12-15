@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.library.mapper.user.ReturnMapper">
+
+    <update id="onlyReturnOrdinaryBook">
+        update ordinary_book,ordinary_book_item
+        set in_count=in_count+1,should_return_time=#{shouldReturnTime},state=#{state}
+        where ordinary_book.id=#{bookId} and ordinary_book_item.id=#{id};
+    </update>
+    <update id="onlyReturnMagazine">
+        update magazine,magazine_item
+        set in_count=in_count+1,should_return_time=#{shouldReturnTime},state=#{state}
+        where magazine.id=#{bookId} and magazine_item.id=#{id};
+    </update>
+    <update id="onlyReturnPaper">
+        update paper_item,paper
+        set in_count=in_count+1,should_return_time=#{shouldReturnTime},state=#{state}
+        where paper.id=#{bookId} and paper_item.id=#{id};
+    </update>
+</mapper>

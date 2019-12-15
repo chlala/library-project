@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/dblib?serverTimezone=UTC&allowMultiQueries=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+  mail:
+    username: 1032621325@qq.com
+    password: dvawdinovlmkbdce
+    host: smtp.qq.com
+  jackson:
+    date-format: yyyy-MM-dd
+    time-zone: GMT+8
+logging:
+  level:
+    com:
+      example:
+        library:
+          mapper: debug
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+  mapper-locations: classpath:mybatis/mapper/*.xml
